@@ -4,14 +4,14 @@
     "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Infrastructure/ApartmentRental.Infrastructure.csproj": {}
   },
   "projects": {
-    "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Infrastructure/ApartmentRental.Infrastructure.csproj": {
+    "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Core/ApartmentRental.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Infrastructure/ApartmentRental.Infrastructure.csproj",
-        "projectName": "ApartmentRental.Infrastructure",
-        "projectPath": "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Infrastructure/ApartmentRental.Infrastructure.csproj",
+        "projectUniqueName": "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Core/ApartmentRental.Core.csproj",
+        "projectName": "ApartmentRental.Core",
+        "projectPath": "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Core/ApartmentRental.Core.csproj",
         "packagesPath": "/Users/mateusz/.nuget/packages/",
-        "outputPath": "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Infrastructure/obj/",
+        "outputPath": "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/mateusz/.nuget/NuGet/NuGet.Config"
@@ -37,6 +37,72 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.201/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Infrastructure/ApartmentRental.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Infrastructure/ApartmentRental.Infrastructure.csproj",
+        "projectName": "ApartmentRental.Infrastructure",
+        "projectPath": "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Infrastructure/ApartmentRental.Infrastructure.csproj",
+        "packagesPath": "/Users/mateusz/.nuget/packages/",
+        "outputPath": "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/mateusz/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Core/ApartmentRental.Core.csproj": {
+                "projectPath": "/Users/mateusz/RiderProjects/ApartmentRental.API/ApartmentRental.Core/ApartmentRental.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[6.0.3, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

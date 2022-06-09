@@ -6,7 +6,13 @@ using Microsoft.EntityFrameworkCore;
 namespace ApartmentRental.Infrastructure.Repository;
 
 public class ApartmentRepository : IApartmentRepository
-{
+{    
+    private readonly MainContext _mainContext;
+
+    public ApartmentRepository(MainContext mainContext)
+    {
+        _mainContext = mainContext;
+    }
     public async Task<IEnumerable<Apartment>> GetAll()
     {
         var apartments = await _mainContext.Apartment.ToListAsync();
@@ -35,7 +41,7 @@ public class ApartmentRepository : IApartmentRepository
     public async Task Add(Apartment entity)
     {
         var apartmentToAdd = await _mainContext.Apartment.SingleOrDefaultAsync(x => x.Address == entity.Address);
-        if (apartmentToAdd != null) throw new AddressAlreadyExistsException();
+        if (apartmentToAdd != null) throw new EntityAlreadyExistsException();
         entity.DateOfCreation = DateTime.UtcNow;
         await _mainContext.AddAsync(entity);
         await _mainContext.SaveChangesAsync();
@@ -44,12 +50,8 @@ public class ApartmentRepository : IApartmentRepository
     public async Task Update(Apartment entity)
     {
         var apartmentsToUpdate = await _mainContext.Apartment.SingleOrDefaultAsync(x => x.Id == entity.Id);
-
-        if (apartmentsToUpdate == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
+        if (apartmentsToUpdate == null) throw new EntityNotFoundException();
+        
         apartmentsToUpdate.Floor = entity.Floor;
         apartmentsToUpdate.HasElevator = entity.HasElevator;
         apartmentsToUpdate.Rent = entity.Rent;
@@ -70,12 +72,5 @@ public class ApartmentRepository : IApartmentRepository
         }
 
         throw new EntityNotFoundException();
-    }
-
-    private readonly MainContext _mainContext;
-
-    public ApartmentRepository(MainContext mainContext)
-    {
-        _mainContext = mainContext;
     }
 }

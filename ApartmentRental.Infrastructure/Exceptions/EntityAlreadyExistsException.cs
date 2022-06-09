@@ -1,6 +1,6 @@
 namespace ApartmentRental.Infrastructure.Exceptions;
 
-public class AddressAlreadyExistsException : Exception
+public class EntityAlreadyExistsException : Exception
 {
     
 }

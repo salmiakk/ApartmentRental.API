@@ -1,31 +1,74 @@
 using ApartmentRental.Core.Entities;
+using ApartmentRental.Infrastructure.Context;
+using ApartmentRental.Infrastructure.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApartmentRental.Infrastructure.Repository;
 
 public class LandlordRepository : ILandlordRepository
 {
-    public Task<IEnumerable<Landlord>> GetAll()
+    private readonly MainContext _mainContext;
+
+    public  LandlordRepository(MainContext mainContext)
     {
-        throw new NotImplementedException();
+        _mainContext = mainContext;
     }
 
-    public Task<Landlord> GetById(int id)
+    public async Task<IEnumerable<Landlord>> GetAll()
     {
-        throw new NotImplementedException();
+        var landlords = await _mainContext.Landlord.ToListAsync();
+
+        foreach (var landlord in landlords)
+        {
+            await _mainContext.Entry(landlord).Reference(x=> x.Account).LoadAsync();
+            await _mainContext.Entry(landlord).Reference(x=> x.Apartments).LoadAsync();
+        }
+        return landlords;
     }
 
-    public Task Add(Landlord entity)
+    public async Task<Landlord> GetById(int id)
     {
-        throw new NotImplementedException();
+        var landlord = await _mainContext.Landlord.SingleOrDefaultAsync(x => x.Id == id);
+        if (landlord != null)
+        {
+            await _mainContext.Entry(landlord).Reference(x => x.Account).LoadAsync();
+            await _mainContext.Entry(landlord).Reference(x => x.Apartments).LoadAsync();
+            return landlord;
+        }
+
+        throw new EntityNotFoundException();
+
     }
 
-    public Task Update(Landlord entity)
+    public async Task Add(Landlord entity)
     {
-        throw new NotImplementedException();
+        var landlordsToAdd = await _mainContext.Landlord.SingleOrDefaultAsync(x => x.Id == entity.Id);
+        if (landlordsToAdd != null) throw new EntityAlreadyExistsException();
+        entity.DateOfCreation = DateTime.UtcNow;
+        await _mainContext.AddAsync(entity);
+        await _mainContext.SaveChangesAsync();
     }
 
-    public Task DeleteById(int id)
+    public async Task Update(Landlord entity)
     {
-        throw new NotImplementedException();
+        var landlordsToUpdate = await _mainContext.Landlord.SingleOrDefaultAsync(x => x.Id == entity.Id);
+        if (landlordsToUpdate == null) throw new EntityNotFoundException();
+
+        landlordsToUpdate.Account = entity.Account;
+        landlordsToUpdate.AccountId = entity.AccountId;
+        landlordsToUpdate.Apartments = entity.Apartments;
+
+        await _mainContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteById(int id)
+    {
+        var landlordsToDelete = await _mainContext.Landlord.SingleOrDefaultAsync(x => x.Id == id);
+        if (landlordsToDelete != null)
+        {
+            _mainContext.Landlord.Remove(landlordsToDelete);
+            await _mainContext.SaveChangesAsync();
+        }
+        throw new EntityNotFoundException();
     }
 }

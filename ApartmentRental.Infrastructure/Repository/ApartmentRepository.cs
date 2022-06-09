@@ -1,31 +1,81 @@
 using ApartmentRental.Core.Entities;
+using ApartmentRental.Infrastructure.Context;
+using ApartmentRental.Infrastructure.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApartmentRental.Infrastructure.Repository;
 
 public class ApartmentRepository : IApartmentRepository
 {
-    public Task<IEnumerable<Apartment>> GetAll()
+    public async Task<IEnumerable<Apartment>> GetAll()
     {
-        throw new NotImplementedException();
+        var apartments = await _mainContext.Apartment.ToListAsync();
+
+        foreach (var apartment in apartments)
+        {
+            await _mainContext.Entry(apartment).Reference(x => x.Address).LoadAsync();
+        }
+
+        return apartments;
     }
 
-    public Task<Apartment> GetById(int id)
+    public async Task<Apartment> GetById(int id)
     {
-        throw new NotImplementedException();
+        var apartment = await _mainContext.Apartment.SingleOrDefaultAsync(x => x.Id == id);
+
+        if (apartment != null)
+        {
+            await _mainContext.Entry(apartment).Reference(x => x.Address).LoadAsync();
+            return apartment;
+        }
+
+        throw new EntityNotFoundException();
     }
 
-    public Task Add(Apartment entity)
+    public async Task Add(Apartment entity)
     {
-        throw new NotImplementedException();
+        var apartmentToAdd = await _mainContext.Apartment.SingleOrDefaultAsync(x => x.Address == entity.Address);
+        if (apartmentToAdd != null) throw new AddressAlreadyExistsException();
+        entity.DateOfCreation = DateTime.UtcNow;
+        await _mainContext.AddAsync(entity);
+        await _mainContext.SaveChangesAsync();
     }
 
-    public Task Update(Apartment entity)
+    public async Task Update(Apartment entity)
     {
-        throw new NotImplementedException();
+        var apartmentsToUpdate = await _mainContext.Apartment.SingleOrDefaultAsync(x => x.Id == entity.Id);
+
+        if (apartmentsToUpdate == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        apartmentsToUpdate.Floor = entity.Floor;
+        apartmentsToUpdate.HasElevator = entity.HasElevator;
+        apartmentsToUpdate.Rent = entity.Rent;
+        apartmentsToUpdate.Size = entity.Size;
+        apartmentsToUpdate.Rooms = entity.Rooms;
+        apartmentsToUpdate.DateOfUpdate = DateTime.UtcNow;
+        
+        await _mainContext.SaveChangesAsync();
     }
 
-    public Task DeleteById(int id)
+    public async Task DeleteById(int id)
     {
-        throw new NotImplementedException();
+        var apartmentsToDelete = await _mainContext.Apartment.SingleOrDefaultAsync(x => x.Id == id);
+        if (apartmentsToDelete != null)
+        {
+            _mainContext.Apartment.Remove(apartmentsToDelete);
+            await _mainContext.SaveChangesAsync();
+        }
+
+        throw new EntityNotFoundException();
+    }
+
+    private readonly MainContext _mainContext;
+
+    public ApartmentRepository(MainContext mainContext)
+    {
+        _mainContext = mainContext;
     }
 }

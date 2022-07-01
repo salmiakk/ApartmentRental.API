@@ -1,5 +1,5 @@
-using ApartmentRental.Core.Entities;
 using ApartmentRental.Infrastructure.Context;
+using ApartmentRental.Infrastructure.Entities;
 using ApartmentRental.Infrastructure.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +13,7 @@ public class ApartmentRepository : IApartmentRepository
     {
         _mainContext = mainContext;
     }
-    public async Task<IEnumerable<Apartment>> GetAll()
+    public async Task<IEnumerable<Apartment>> GetAllAsync()
     {
         var apartments = await _mainContext.Apartment.ToListAsync();
 
@@ -38,7 +38,7 @@ public class ApartmentRepository : IApartmentRepository
         throw new EntityNotFoundException();
     }
 
-    public async Task Add(Apartment entity)
+    public async Task AddAsync(Apartment entity)
     {
         var apartmentToAdd = await _mainContext.Apartment.SingleOrDefaultAsync(x => x.Address == entity.Address);
         if (apartmentToAdd != null) throw new EntityAlreadyExistsException();

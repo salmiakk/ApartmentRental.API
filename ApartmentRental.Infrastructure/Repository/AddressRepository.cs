@@ -1,5 +1,5 @@
-using ApartmentRental.Core.Entities;
 using ApartmentRental.Infrastructure.Context;
+using ApartmentRental.Infrastructure.Entities;
 using ApartmentRental.Infrastructure.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +14,7 @@ public class AddressRepository : IAddressRepository
         _mainContext = mainContext;
     }
 
-    public async Task<IEnumerable<Address>> GetAll()
+    public async Task<IEnumerable<Address>> GetAllAsync()
     {
         var addresses = await _mainContext.Address.ToListAsync();
         return addresses;
@@ -31,7 +31,7 @@ public class AddressRepository : IAddressRepository
         throw new EntityNotFoundException();
     }
 
-    public async Task Add(Address entity)
+    public async Task AddAsync(Address entity)
     {
         var addressToAdd = await _mainContext.Address.SingleOrDefaultAsync(x => x.Id == entity.Id);
         if (addressToAdd != null) throw new EntityAlreadyExistsException();
@@ -68,5 +68,25 @@ public class AddressRepository : IAddressRepository
         }
 
         throw new EntityNotFoundException();
+    }
+
+    public async Task<int> GetAddressIdByItsAttributesAsync(string country, string city, string postcode, string street, string buildingNumber,
+        string apartmentNumber)
+    {
+        var address = await _mainContext.Address.FirstOrDefaultAsync(x =>
+            x.Country == country && x.City == city && x.Postcode == postcode && x.Street == street &&
+            x.BuildingNumber == buildingNumber && x.ApartmentNumber == apartmentNumber);
+        
+        return address?.Id ?? 0;
+    }
+
+    public async Task<Address> CreateAndGetAsync(Address address)
+    {
+        address.DateOfCreation = DateTime.UtcNow;
+        address.DateOfUpdate = DateTime.UtcNow;
+        await _mainContext.AddAsync(address);
+        await _mainContext.SaveChangesAsync();
+
+        return address;
     }
 }

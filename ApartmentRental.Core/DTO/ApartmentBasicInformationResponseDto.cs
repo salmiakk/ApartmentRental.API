@@ -1,4 +1,4 @@
-﻿namespace ApartmentRental.Core.Dto;
+﻿namespace ApartmentRental.Core.DTO;
 
 public class ApartmentBasicInformationResponseDto
 {

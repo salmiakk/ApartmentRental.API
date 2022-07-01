@@ -1,4 +1,4 @@
-﻿using ApartmentRental.Core.Dto;
+﻿using ApartmentRental.Core.DTO;
 
 namespace ApartmentRental.Core.Services;
 

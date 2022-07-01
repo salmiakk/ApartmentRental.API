@@ -1,4 +1,4 @@
-using ApartmentRental.Core.Entities;
+using ApartmentRental.Infrastructure.Entities;
 
 namespace ApartmentRental.Infrastructure.Repository;
 

@@ -1,5 +1,5 @@
-using ApartmentRental.Core.Entities;
 using ApartmentRental.Infrastructure.Context;
+using ApartmentRental.Infrastructure.Entities;
 using ApartmentRental.Infrastructure.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +14,7 @@ public class ImageRepository : IImageRepository
         _mainContext = mainContext;
     }
 
-    public async Task<IEnumerable<Image>> GetAll()
+    public async Task<IEnumerable<Image>> GetAllAsync()
     {
         var images = await _mainContext.Image.ToListAsync();
         foreach (var image in images)
@@ -37,7 +37,7 @@ public class ImageRepository : IImageRepository
         throw new EntityNotFoundException();
     }
 
-    public async Task Add(Image entity)
+    public async Task AddAsync(Image entity)
     {
         var imagesToAdd = await _mainContext.Image.SingleOrDefaultAsync(x => x.Id == entity.Id);
         if (imagesToAdd != null) throw new EntityAlreadyExistsException();

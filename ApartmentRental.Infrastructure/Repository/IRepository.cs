@@ -2,9 +2,9 @@ namespace ApartmentRental.Infrastructure.Repository;
 
 public interface IRepository<T>
 {
-        Task<IEnumerable<T>> GetAll();
+        Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetById(int id);
-        Task Add(T entity);
+        Task AddAsync(T entity);
         Task Update(T entity);
         Task DeleteById(int id);
 }
